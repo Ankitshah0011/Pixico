@@ -3,14 +3,20 @@ import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
 import { AppContext } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const GenerateBtn = () => {
-  const { user, setShowLogin } = useContext(AppContext);
+  const { user, setShowLogin, credit } = useContext(AppContext);
   const navigate = useNavigate();
 
   const onClickHandler = () => {
     if (user) {
-      navigate("/result");
+      if (credit <= 0) {
+        toast.error("No Credit Balance");
+        navigate("/buy");
+      } else {
+        navigate("/result");
+      }
     } else {
       setShowLogin(true);
     }

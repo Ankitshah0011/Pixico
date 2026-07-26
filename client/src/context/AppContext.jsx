@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -9,6 +10,8 @@ const AppContextProvider = ({ children }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [credit, setCredit] = useState(0);
+
+  const navigate = useNavigate();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -30,15 +33,25 @@ const AppContextProvider = ({ children }) => {
         setUser(data.user);
       } else {
         toast.error(data.message);
+        setToken("");
+        localStorage.removeItem("token");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
+      setToken("");
+      localStorage.removeItem("token");
     }
   };
 
   // Generate Image
   const generateImage = async (prompt) => {
     try {
+      if (credit <= 0) {
+        toast.error("No Credit Balance");
+        navigate("/buy");
+        return null;
+      }
+
       const { data } = await axios.post(
         backendUrl + "/api/image/generate-image",
         { prompt },
@@ -55,8 +68,8 @@ const AppContextProvider = ({ children }) => {
       } else {
         toast.error(data.message);
 
-        if (data.creditBalance === 0) {
-          window.location.href = "/buy";
+        if (data.creditBalance <= 0) {
+          navigate("/buy");
         }
 
         return null;

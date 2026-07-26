@@ -100,6 +100,13 @@ const userCredit = async (req, res) => {
 
     const user = await userModel.findById(userId);
 
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+
     res.json({
       success: true,
       credits: user.creditBalance,

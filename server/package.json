@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Imagify Backend",
+  "description": "Pexico Backend",
   "main": "server.js",
   "type": "module",
   "scripts": {

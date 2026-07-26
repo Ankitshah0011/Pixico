@@ -119,7 +119,7 @@ const Header = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 0.8 }}
       >
-        Generated images from Pexico
+        Generated images from Pixico
       </motion.p>
     </motion.div>
   );

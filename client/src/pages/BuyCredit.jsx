@@ -2,9 +2,66 @@ import React, { useContext } from "react";
 import { assets, plans } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const BuyCredit = () => {
-  const { user } = useContext(AppContext);
+  const {
+    user,
+    backendUrl,
+    loadCreditsData,
+    token,
+    setShowLogin,
+  } = useContext(AppContext);
+
+  const navigate = useNavigate();
+
+  const initpay = async (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Credits payment",
+      description: "Credits payment",
+      order_id: order.id,
+      receipt: order.receipt,
+
+      handler: async (response) => {
+        console.log(response);
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
+  const paymentRazorpay = async (planId) => {
+    try {
+      if (!user) {
+        setShowLogin(true);
+        return;
+      }
+
+      const { data } = await axios.post(
+        backendUrl + "/api/user/pay-razor",
+        { planId },
+        {
+          headers: {
+            token,
+          },
+        }
+      );
+
+      if (data.success) {
+        initpay(data.order);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <motion.div
@@ -45,7 +102,10 @@ const BuyCredit = () => {
               / {item.credits} Credits
             </p>
 
-            <button className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52">
+            <button
+              onClick={() => paymentRazorpay(item.id)}
+              className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
+            >
               {user ? "Purchase" : "Get Started"}
             </button>
           </div>

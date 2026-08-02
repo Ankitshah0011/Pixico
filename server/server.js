@@ -9,14 +9,11 @@ import imageRouter from "./routes/imageRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Connect Database
 connectDB();
 
-// Middlewares
 app.use(express.json());
 app.use(cors());
 
-// Routes
 app.use("/api/user", userRouter);
 app.use("/api/image", imageRouter);
 

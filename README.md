@@ -47,14 +47,18 @@ Pixico/
 └── server/     # Node.js/Express backend
 ```
 
-## 🌐 Live Project
 
-Visit the application:
-
-https://pixico-sigma.vercel.app/
 
 ## 👨‍💻 Author
 
 Ankit Shah
-
 B.Tech Computer Engineering Student
+
+
+## 📸 Screenshots
+
+### Home / Image Generation
+![Pixico Home](pixico-home.jpg.png)
+
+### Generated Image
+![Pixico Image Generation](Pixico_image_generate.png)
